@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L.M.R - מערכות סולאריות</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+<!-- ===== PUBLIC STOREFRONT ===== -->
+<div id="storefront">
+    <!-- Hero -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>L.M.R</h1>
+            <h2>מערכות סולאריות</h2>
+            <p>חיסכון באנרגיה, השקעה בעתיד</p>
+            <button class="btn btn-admin-login" onclick="showLogin()">כניסת מנהל</button>
+        </div>
+    </header>
+
+    <!-- Products Section -->
+    <main class="products-container">
+        <h2 class="section-title">בחרו את המערכת שלכם</h2>
+        <p class="section-subtitle">בחרו מוצרים מכל קטגוריה לפי הצורך שלכם. אפשר לבחור מכל קטגוריה או לדלג</p>
+
+        <!-- Panels -->
+        <section class="category-section" id="panels-section">
+            <div class="category-header">
+                <span class="category-icon">☀️</span>
+                <h3>פאנלים סולאריים</h3>
+            </div>
+            <div class="product-cards" id="panels-cards"></div>
+            <label class="skip-option">
+                <input type="radio" name="panel" value="none" checked onchange="updateSummary()">
+                <span>לא צריך פאנלים</span>
+            </label>
+        </section>
+
+        <!-- Inverters -->
+        <section class="category-section" id="inverters-section">
+            <div class="category-header">
+                <span class="category-icon">⚡</span>
+                <h3>ממירים (אינוורטרים)</h3>
+            </div>
+            <div class="product-cards" id="inverters-cards"></div>
+            <label class="skip-option">
+                <input type="radio" name="inverter" value="none" checked onchange="updateSummary()">
+                <span>לא צריך ממיר</span>
+            </label>
+        </section>
+
+        <!-- Batteries -->
+        <section class="category-section" id="batteries-section">
+            <div class="category-header">
+                <span class="category-icon">🔋</span>
+                <h3>סוללות אחסון</h3>
+            </div>
+            <div class="product-cards" id="batteries-cards"></div>
+            <label class="skip-option">
+                <input type="radio" name="battery" value="none" checked onchange="updateSummary()">
+                <span>לא צריך סוללה</span>
+            </label>
+        </section>
+    </main>
+
+    <!-- Sticky Summary Bar -->
+    <div class="summary-bar" id="summary-bar">
+        <div class="summary-content">
+            <div class="summary-items" id="summary-items">
+                <span class="summary-empty">בחרו מוצרים כדי לראות סיכום</span>
+            </div>
+            <div class="summary-total" id="summary-total"></div>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact-section">
+        <h2 class="section-title">צרו קשר</h2>
+        <p class="pricing-note">* לתמחור מדויק יותר אנא צרו קשר</p>
+
+        <div class="contact-grid">
+            <!-- Contact Form -->
+            <form class="contact-form" id="contact-form" onsubmit="submitContact(event)">
+                <h3>השאירו פרטים ונחזור אליכם</h3>
+                <input type="text" id="contact-name" placeholder="שם מלא *" required>
+                <input type="tel" id="contact-phone" placeholder="טלפון *" required>
+                <input type="email" id="contact-email" placeholder="אימייל (אופציונלי)">
+                <textarea id="contact-message" placeholder="הודעה / הערות" rows="3"></textarea>
+                <button type="submit" class="btn btn-primary">שלח פנייה</button>
+                <div class="form-success" id="form-success" style="display:none">✅ הפנייה נשלחה בהצלחה! ניצור קשר בהקדם</div>
+            </form>
+
+            <!-- WhatsApp -->
+            <div class="whatsapp-box">
+                <h3>או שלחו הודעה בוואטסאפ</h3>
+                <p>לחצו על הכפתור לשליחת ההצעה שלכם ישירות בוואטסאפ</p>
+                <button class="btn btn-whatsapp" onclick="openWhatsApp()">
+                    <span class="wa-icon">📱</span> שלח בוואטסאפ
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>L.M.R מערכות סולאריות &copy; 2026</p>
+    </footer>
+</div>
+
+<!-- ===== LOGIN MODAL ===== -->
+<div class="modal-overlay" id="login-modal" style="display:none">
+    <div class="modal">
+        <button class="modal-close" onclick="hideLogin()">&times;</button>
+        <h2>כניסת מנהל</h2>
+        <form onsubmit="doLogin(event)">
+            <input type="text" id="login-user" placeholder="שם משתמש" required>
+            <input type="password" id="login-pass" placeholder="סיסמה" required>
+            <button type="submit" class="btn btn-primary">כניסה</button>
+            <div class="login-error" id="login-error" style="display:none"></div>
+        </form>
+    </div>
+</div>
+
+<!-- ===== ADMIN PANEL ===== -->
+<div id="admin-panel" style="display:none">
+    <header class="admin-header">
+        <h1>L.M.R - ניהול</h1>
+        <div class="admin-actions">
+            <button class="btn btn-secondary" onclick="showAdminPage('products')">מוצרים</button>
+            <button class="btn btn-secondary" onclick="showAdminPage('contacts')">פניות</button>
+            <button class="btn btn-secondary" onclick="backToStore()">חזרה לחנות</button>
+            <button class="btn btn-danger" onclick="doLogout()">יציאה</button>
+        </div>
+    </header>
+
+    <!-- Products Management -->
+    <div class="admin-page" id="admin-products">
+        <div class="admin-toolbar">
+            <h2>ניהול מוצרים</h2>
+            <button class="btn btn-primary" onclick="showProductModal()">+ הוסף מוצר</button>
+        </div>
+
+        <div class="admin-category" id="admin-panels">
+            <h3>☀️ פאנלים</h3>
+            <table class="admin-table"><thead><tr><th>שם</th><th>מותג</th><th>מחיר</th><th>פעיל</th><th>פעולות</th></tr></thead><tbody id="admin-panels-body"></tbody></table>
+        </div>
+        <div class="admin-category" id="admin-inverters">
+            <h3>⚡ ממירים</h3>
+            <table class="admin-table"><thead><tr><th>שם</th><th>מותג</th><th>מחיר</th><th>פעיל</th><th>פעולות</th></tr></thead><tbody id="admin-inverters-body"></tbody></table>
+        </div>
+        <div class="admin-category" id="admin-batteries">
+            <h3>🔋 סוללות</h3>
+            <table class="admin-table"><thead><tr><th>שם</th><th>מותג</th><th>מחיר</th><th>פעיל</th><th>פעולות</th></tr></thead><tbody id="admin-batteries-body"></tbody></table>
+        </div>
+    </div>
+
+    <!-- Contacts Management -->
+    <div class="admin-page" id="admin-contacts" style="display:none">
+        <h2>פניות לקוחות</h2>
+        <table class="admin-table"><thead><tr><th>תאריך</th><th>שם</th><th>טלפון</th><th>הודעה</th><th>מוצרים</th><th>סה"כ</th><th>סטטוס</th><th>פעולות</th></tr></thead><tbody id="admin-contacts-body"></tbody></table>
+    </div>
+</div>
+
+<!-- ===== PRODUCT MODAL (ADMIN) ===== -->
+<div class="modal-overlay" id="product-modal" style="display:none">
+    <div class="modal modal-wide">
+        <button class="modal-close" onclick="hideProductModal()">&times;</button>
+        <h2 id="product-modal-title">הוסף מוצר</h2>
+        <form onsubmit="saveProduct(event)">
+            <input type="hidden" id="prod-id">
+            <div class="form-row">
+                <select id="prod-category" required>
+                    <option value="">בחר קטגוריה</option>
+                    <option value="panel">פאנל</option>
+                    <option value="inverter">ממיר</option>
+                    <option value="battery">סוללה</option>
+                </select>
+                <input type="text" id="prod-name" placeholder="שם המוצר *" required>
+            </div>
+            <div class="form-row">
+                <input type="text" id="prod-brand" placeholder="מותג *" required>
+                <input type="number" id="prod-price" placeholder="מחיר (₪)" step="0.01">
+            </div>
+            <textarea id="prod-description" placeholder="תיאור" rows="2"></textarea>
+            <textarea id="prod-specs" placeholder='מפרט (JSON): {"power":"580W","warranty":"25 שנה"}' rows="2"></textarea>
+            <div class="form-row">
+                <input type="number" id="prod-sort" placeholder="סדר (0)" value="0">
+                <label class="checkbox-label"><input type="checkbox" id="prod-active" checked> פעיל</label>
+            </div>
+            <button type="submit" class="btn btn-primary">שמור</button>
+        </form>
+    </div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
