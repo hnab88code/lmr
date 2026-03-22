@@ -430,36 +430,49 @@ function switchTab(tabName) {
     event.target.classList.add("active");
 }
 
-// ===== Price Estimation =====
-const estimateData = {
-    // price ranges per kW system size [panels_cost, inverter_cost, installation_cost]
-    30:  { kw: 5,  panels: 8,  priceFlat: 18000, priceAngled: 22000 },
-    50:  { kw: 8,  panels: 14, priceFlat: 28000, priceAngled: 34000 },
-    80:  { kw: 12, panels: 21, priceFlat: 42000, priceAngled: 50000 },
-    120: { kw: 20, panels: 35, priceFlat: 65000, priceAngled: 78000 },
-};
+// ===== Price Estimation (Slider) =====
+function getSizeCategory(sqm) {
+    if (sqm <= 40) return { icon: "🏠", label: "קטן", desc: `עד 40 מ"ר`, kw: Math.max(3, Math.round(sqm * 0.15)), pricePerSqmFlat: 500, pricePerSqmAngled: 600 };
+    if (sqm <= 180) return { icon: "🏡", label: "בינוני", desc: `40-180 מ"ר`, kw: Math.round(sqm * 0.14), pricePerSqmFlat: 450, pricePerSqmAngled: 550 };
+    if (sqm <= 180) return { icon: "🏘️", label: "גדול", desc: `80-180 מ"ר`, kw: Math.round(sqm * 0.13), pricePerSqmFlat: 400, pricePerSqmAngled: 500 };
+    return { icon: "🏭", label: "תעשייתי", desc: `מעל 180 מ"ר - מעל 22kW`, kw: Math.round(sqm * 0.12), pricePerSqmFlat: 350, pricePerSqmAngled: 450 };
+}
 
-function selectEstimate(type, el) {
+function onSliderChange(val) {
+    const sqm = parseInt(val);
+    const cat = getSizeCategory(sqm);
+
+    document.getElementById("slider-icon").textContent = cat.icon;
+    document.getElementById("slider-size").textContent = sqm;
+    document.getElementById("slider-category").textContent = `${cat.label} - ${cat.desc} - ~${cat.kw}kW`;
+
+    calcEstimate();
+}
+
+function selectEstimate() {
     calcEstimate();
 }
 
 function calcEstimate() {
-    const sizeRadio = document.querySelector('input[name="roof-size"]:checked');
+    const sqm = parseInt(document.getElementById("roof-size-slider").value);
     const patternRadio = document.querySelector('input[name="roof-pattern"]:checked');
-    if (!sizeRadio || !patternRadio) {
+    if (!patternRadio) {
         document.getElementById("estimate-result").style.display = "none";
         return;
     }
 
-    const size = sizeRadio.value;
     const pattern = patternRadio.value;
-    const data = estimateData[size];
-    const price = pattern === "flat" ? data.priceFlat : data.priceAngled;
+    const cat = getSizeCategory(sqm);
+    const pricePerSqm = pattern === "flat" ? cat.pricePerSqmFlat : cat.pricePerSqmAngled;
+    const priceLow = Math.round(sqm * pricePerSqm);
+    const priceHigh = Math.round(priceLow * 1.2);
+    const panels = Math.round(sqm / 2.5);
 
-    document.getElementById("estimate-price").textContent = `₪${price.toLocaleString()} - ₪${(price * 1.2).toLocaleString()}`;
+    document.getElementById("estimate-price").textContent = `₪${priceLow.toLocaleString()} - ₪${priceHigh.toLocaleString()}`;
     document.getElementById("estimate-details").innerHTML = `
-        הספק מערכת: ~${data.kw}kW<br>
-        מספר פאנלים משוער: ~${data.panels}<br>
+        שטח גג: ${sqm} מ"ר<br>
+        הספק מערכת: ~${cat.kw}kW<br>
+        מספר פאנלים משוער: ~${panels}<br>
         סוג גג: ${pattern === "flat" ? "שטוח" : "משופע"}<br>
         כולל: פאנלים + ממיר + התקנה
     `;

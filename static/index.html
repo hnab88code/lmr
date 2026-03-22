@@ -106,46 +106,27 @@
             <p class="section-subtitle">בחרו את גודל הגג וסוג הגג לקבלת הערכת מחיר ראשונית</p>
 
             <div class="estimate-form">
-                <!-- Roof Size -->
+                <!-- Roof Size Slider -->
                 <div class="estimate-group">
                     <h3>גודל הגג (מ"ר)</h3>
-                    <div class="estimate-options" id="roof-size-options">
-                        <label class="estimate-card" onclick="selectEstimate('size', this)">
-                            <input type="radio" name="roof-size" value="30">
-                            <div class="estimate-card-inner">
-                                <span class="estimate-icon">🏠</span>
-                                <span class="estimate-label">קטן</span>
-                                <span class="estimate-detail">עד 30 מ"ר</span>
-                                <span class="estimate-detail">~5kW</span>
-                            </div>
-                        </label>
-                        <label class="estimate-card" onclick="selectEstimate('size', this)">
-                            <input type="radio" name="roof-size" value="50">
-                            <div class="estimate-card-inner">
-                                <span class="estimate-icon">🏡</span>
-                                <span class="estimate-label">בינוני</span>
-                                <span class="estimate-detail">30-50 מ"ר</span>
-                                <span class="estimate-detail">~8kW</span>
-                            </div>
-                        </label>
-                        <label class="estimate-card" onclick="selectEstimate('size', this)">
-                            <input type="radio" name="roof-size" value="80">
-                            <div class="estimate-card-inner">
-                                <span class="estimate-icon">🏘️</span>
-                                <span class="estimate-label">גדול</span>
-                                <span class="estimate-detail">50-80 מ"ר</span>
-                                <span class="estimate-detail">~12kW</span>
-                            </div>
-                        </label>
-                        <label class="estimate-card" onclick="selectEstimate('size', this)">
-                            <input type="radio" name="roof-size" value="120">
-                            <div class="estimate-card-inner">
-                                <span class="estimate-icon">🏭</span>
-                                <span class="estimate-label">מסחרי</span>
-                                <span class="estimate-detail">80+ מ"ר</span>
-                                <span class="estimate-detail">~20kW+</span>
-                            </div>
-                        </label>
+                    <div class="slider-container">
+                        <div class="slider-value-display">
+                            <span class="slider-icon" id="slider-icon">🏠</span>
+                            <span class="slider-size" id="slider-size">20</span>
+                            <span class="slider-unit">מ"ר</span>
+                        </div>
+                        <div class="slider-category" id="slider-category">קטן - עד 40 מ"ר - ~5kW</div>
+                        <input type="range" id="roof-size-slider" class="roof-slider" min="10" max="300" value="20" step="5" oninput="onSliderChange(this.value)">
+                        <div class="slider-labels">
+                            <span>10 מ"ר</span>
+                            <span>300 מ"ר</span>
+                        </div>
+                        <div class="slider-ticks">
+                            <div class="slider-tick" style="right: 0%"><span>קטן</span></div>
+                            <div class="slider-tick" style="right: 10%"><span>בינוני</span></div>
+                            <div class="slider-tick" style="right: 56.6%"><span>גדול</span></div>
+                            <div class="slider-tick" style="right: 58.6%"><span>תעשייתי</span></div>
+                        </div>
                     </div>
                 </div>
 

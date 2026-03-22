@@ -102,6 +102,21 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; direction: rtl; backg
 .summary-item { background: rgba(42,172,176,0.2); padding: 4px 12px; border-radius: 20px; }
 .summary-total { font-size: 22px; font-weight: 800; color: var(--gold); white-space: nowrap; }
 
+/* === Roof Size Slider === */
+.slider-container { background: var(--white); border-radius: 16px; padding: 28px 24px; box-shadow: var(--card-shadow); }
+.slider-value-display { text-align: center; margin-bottom: 8px; }
+.slider-icon { font-size: 48px; display: block; margin-bottom: 4px; }
+.slider-size { font-size: 48px; font-weight: 800; color: var(--teal); }
+.slider-unit { font-size: 20px; color: var(--gray); margin-right: 4px; }
+.slider-category { text-align: center; font-size: 17px; font-weight: 600; color: var(--charcoal); margin-bottom: 20px; padding: 8px 16px; background: var(--teal-light); border-radius: 8px; display: inline-block; width: 100%; }
+.roof-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 10px; border-radius: 5px; background: linear-gradient(to left, var(--teal-light), var(--teal), var(--gold)); outline: none; cursor: pointer; direction: ltr; }
+.roof-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 32px; height: 32px; border-radius: 50%; background: var(--teal); border: 4px solid var(--white); box-shadow: 0 2px 8px rgba(0,0,0,0.2); cursor: pointer; transition: transform 0.1s; }
+.roof-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+.roof-slider::-moz-range-thumb { width: 32px; height: 32px; border-radius: 50%; background: var(--teal); border: 4px solid var(--white); box-shadow: 0 2px 8px rgba(0,0,0,0.2); cursor: pointer; }
+.slider-labels { display: flex; justify-content: space-between; margin-top: 8px; font-size: 13px; color: var(--gray); direction: ltr; }
+.slider-ticks { display: flex; justify-content: space-between; margin-top: 4px; position: relative; height: 20px; }
+.slider-tick { position: absolute; font-size: 11px; color: var(--gray); transform: translateX(50%); }
+
 /* === Estimate Tab === */
 .estimate-container { max-width: 900px; margin: 0 auto; padding: 0 20px 60px; }
 .estimate-form { margin-top: 20px; }
