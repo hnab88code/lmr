@@ -94,8 +94,8 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; direction: rtl; backg
 .hero { background: linear-gradient(135deg, var(--charcoal-dark) 0%, var(--charcoal) 50%, var(--charcoal-light) 100%); color: var(--white); text-align: center; padding: 0 20px 0; position: relative; overflow: hidden; }
 .hero h1 { font-size: 52px; font-weight: 800; letter-spacing: 6px; margin-bottom: 4px; color: var(--gold); }
 .hero h2 { font-size: 20px; font-weight: 400; color: var(--teal); letter-spacing: 3px; margin-bottom: 8px; }
-.hero-tagline { font-size: 20px; letter-spacing: 3px; color: rgba(255,255,255,0.6); margin-top: 0; }
-.hero-logo { width: 500px; height: 500px; object-fit: contain; margin-bottom: 0; margin-top: -100px; }
+.hero-logo { width: 500px; height: 500px; object-fit: contain; margin-bottom: -135px; margin-top: -100px; display: block; margin-left: auto; margin-right: auto; }
+.hero-tagline { font-size: 20px; letter-spacing: 3px; color: rgba(255,255,255,0.6); margin-top: 5px; padding-bottom: 20px; }
 
 /* === Tabs === */
 .tabs-nav { display: flex; justify-content: center; background: var(--charcoal); padding: 0; border-bottom: 3px solid var(--gold); position: sticky; top: 0; z-index: 50; }
@@ -299,7 +299,7 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; direction: rtl; backg
 
 /* === Responsive === */
 @media (max-width: 768px) {
-    .hero-logo { width: 350px; height: 350px; margin-top: -70px; }
+    .hero-logo { width: 350px; height: 350px; margin-top: -70px; margin-bottom: -95px; }
     .tabs-nav { flex-wrap: wrap; }
     .tab-btn { font-size: 14px; padding: 12px 16px; flex: 1; min-width: 120px; text-align: center; }
     .product-cards { grid-template-columns: 1fr; }
@@ -312,7 +312,7 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; direction: rtl; backg
     .form-row { flex-direction: column; }
 }
 @media (max-width: 480px) {
-    .hero-logo { width: 280px; height: 280px; margin-top: -50px; }
+    .hero-logo { width: 280px; height: 280px; margin-top: -50px; margin-bottom: -75px; }
     .hero-tagline { font-size: 16px; }
     .section-title { font-size: 22px; }
     .tab-btn { font-size: 13px; padding: 10px 12px; }
