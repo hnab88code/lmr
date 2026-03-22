@@ -38,6 +38,7 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; direction: rtl; backg
 /* === Hero === */
 .hero { background: linear-gradient(135deg, var(--dark) 0%, #16213e 50%, #0f3460 100%); color: var(--white); text-align: center; padding: 80px 20px 60px; position: relative; }
 .hero h1 { font-size: 56px; font-weight: 800; letter-spacing: 4px; margin-bottom: 8px; color: var(--primary); }
+.hero-logo { width: 140px; height: 140px; object-fit: contain; border-radius: 50%; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(245,158,11,0.3); }
 .hero h2 { font-size: 28px; font-weight: 400; margin-bottom: 12px; }
 .hero p { font-size: 18px; opacity: 0.8; }
 
