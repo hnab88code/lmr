@@ -83,7 +83,7 @@ class Order(Base):
     __tablename__ = "orders"
 
     id = Column(Integer, primary_key=True, index=True)
-    access_code = Column(String(8), unique=True, nullable=False)
+    access_code = Column(String(20), nullable=False)
     customer_name = Column(String(100), nullable=False)
     customer_phone = Column(String(20), nullable=False)
     customer_email = Column(String(200), default="")

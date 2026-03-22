@@ -10,7 +10,7 @@ router = APIRouter(prefix="/api/orders", tags=["orders"])
 
 
 def generate_code():
-    return secrets.token_hex(4).upper()  # 8 char hex
+    return str(secrets.randbelow(9000) + 1000)  # 4 digit code
 
 
 # === Public ===

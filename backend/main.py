@@ -126,7 +126,7 @@ def seed_orders(db):
 
     orders_data = [
         {
-            "access_code": "abc12345",
+            "access_code": "1234",
             "customer_name": "יוסי כהן",
             "customer_phone": "050-1234567",
             "customer_email": "yossi@example.com",
@@ -138,7 +138,7 @@ def seed_orders(db):
             ],
         },
         {
-            "access_code": "def67890",
+            "access_code": "1234",
             "customer_name": "שרה לוי",
             "customer_phone": "052-9876543",
             "customer_email": "sara@example.com",
@@ -151,7 +151,7 @@ def seed_orders(db):
             ],
         },
         {
-            "access_code": "ghi11223",
+            "access_code": "1234",
             "customer_name": "דוד אברהם",
             "customer_phone": "054-5551234",
             "customer_email": "david@example.com",
@@ -164,7 +164,7 @@ def seed_orders(db):
             ],
         },
         {
-            "access_code": "jkl44556",
+            "access_code": "1234",
             "customer_name": "רחל מזרחי",
             "customer_phone": "053-7778888",
             "customer_email": "rachel@example.com",
@@ -176,7 +176,7 @@ def seed_orders(db):
             ],
         },
         {
-            "access_code": "mno77889",
+            "access_code": "1234",
             "customer_name": "משה ביטון",
             "customer_phone": "058-1112222",
             "customer_email": "moshe@example.com",
@@ -189,7 +189,7 @@ def seed_orders(db):
             ],
         },
         {
-            "access_code": "pqr99001",
+            "access_code": "1234",
             "customer_name": "נועה פרידמן",
             "customer_phone": "050-3334444",
             "customer_email": "noa@example.com",

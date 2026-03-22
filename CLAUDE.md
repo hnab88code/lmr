@@ -2,7 +2,7 @@
 
 ## Rules
 - **IMPORTANT: Every commit MUST include an update to this CLAUDE.md file** reflecting the change.
-- **Version number**: Update `APP_VERSION` in `static/app.js` with each release. Current: **v1.2.0**
+- **Version number**: Update `APP_VERSION` in `static/app.js` with each release. Current: **v1.2.1**
 - **After each commit, print the current version number** to the user.
 - **Database columns**: When adding new columns to existing models, the `auto_migrate()` function in `main.py` handles it automatically.
 - **UI Language**: Hebrew (RTL), code in English.
