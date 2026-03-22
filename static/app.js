@@ -1,4 +1,4 @@
-const APP_VERSION = "v1.0.0";
+const APP_VERSION = "v1.1.0";
 const API = "";
 const WHATSAPP_NUMBER = "972501234567";
 
@@ -276,6 +276,7 @@ function doLogout() {
 function showAdmin() {
     document.getElementById("storefront").style.display = "none";
     document.getElementById("admin-panel").style.display = "block";
+    document.getElementById("app-version").textContent = APP_VERSION;
     showAdminPage("products");
 }
 
