@@ -34,14 +34,21 @@ def auto_migrate():
 
 
 def seed_admin(db):
-    if not db.query(Admin).first():
-        admin = Admin(username="admin", hashed_password=hash_password("admin123"))
-        db.add(admin)
-        db.commit()
+    try:
+        if not db.query(Admin).first():
+            admin = Admin(username="admin", hashed_password=hash_password("admin123"))
+            db.add(admin)
+            db.commit()
+    except Exception:
+        db.rollback()
 
 
 def seed_products(db):
-    if db.query(Product).count() > 0:
+    try:
+        if db.query(Product).count() > 0:
+            return
+    except Exception:
+        db.rollback()
         return
 
     products_data = [
