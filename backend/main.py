@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from sqlalchemy import inspect, text
 from backend.database import engine, Base, SessionLocal
-from backend.models import Admin, Product, ProductCategory, SiteSetting, Order, OrderItem
+from backend.models import Admin, Product, ProductCategory, SiteSetting, Order, OrderItem, OrderStatus, ArrivalStatus
 from backend.auth import hash_password
 from backend.routers import auth, products, contacts, settings, orders
 
@@ -116,6 +116,102 @@ def seed_products(db):
     db.commit()
 
 
+def seed_orders(db):
+    try:
+        if db.query(Order).count() > 0:
+            return
+    except Exception:
+        db.rollback()
+        return
+
+    orders_data = [
+        {
+            "access_code": "abc12345",
+            "customer_name": "יוסי כהן",
+            "customer_phone": "050-1234567",
+            "customer_email": "yossi@example.com",
+            "status": OrderStatus.received,
+            "notes": "לקוח חדש, בית פרטי בנתניה",
+            "items": [
+                {"product_name": "JA Solar 580W Mono", "product_category": "panel", "quantity": 12, "unit_price": 450, "arrival_status": ArrivalStatus.pending},
+                {"product_name": "SolarEdge SE5000H", "product_category": "inverter", "quantity": 1, "unit_price": 4500, "arrival_status": ArrivalStatus.pending},
+            ],
+        },
+        {
+            "access_code": "def67890",
+            "customer_name": "שרה לוי",
+            "customer_phone": "052-9876543",
+            "customer_email": "sara@example.com",
+            "status": OrderStatus.electric_company,
+            "notes": "ממתינים לאישור חברת חשמל",
+            "items": [
+                {"product_name": "Trina Solar 550W Mono", "product_category": "panel", "quantity": 8, "unit_price": 420, "arrival_status": ArrivalStatus.arrived},
+                {"product_name": "Huawei SUN2000-6KTL", "product_category": "inverter", "quantity": 1, "unit_price": 3800, "arrival_status": ArrivalStatus.arrived},
+                {"product_name": "BYD HVS 5.1kWh", "product_category": "battery", "quantity": 1, "unit_price": 8500, "arrival_status": ArrivalStatus.pending},
+            ],
+        },
+        {
+            "access_code": "ghi11223",
+            "customer_name": "דוד אברהם",
+            "customer_phone": "054-5551234",
+            "customer_email": "david@example.com",
+            "status": OrderStatus.delivery,
+            "notes": "משלוח מתוכנן ליום ראשון",
+            "items": [
+                {"product_name": "JA Solar 580W Mono", "product_category": "panel", "quantity": 20, "unit_price": 450, "arrival_status": ArrivalStatus.arrived},
+                {"product_name": "SolarEdge SE5000H", "product_category": "inverter", "quantity": 2, "unit_price": 4500, "arrival_status": ArrivalStatus.arrived},
+                {"product_name": "Tesla Powerwall 3", "product_category": "battery", "quantity": 1, "unit_price": 22000, "arrival_status": ArrivalStatus.pending},
+            ],
+        },
+        {
+            "access_code": "jkl44556",
+            "customer_name": "רחל מזרחי",
+            "customer_phone": "053-7778888",
+            "customer_email": "rachel@example.com",
+            "status": OrderStatus.installing,
+            "notes": "צוות התקנה באתר",
+            "items": [
+                {"product_name": "Trina Solar 550W Mono", "product_category": "panel", "quantity": 15, "unit_price": 420, "arrival_status": ArrivalStatus.arrived},
+                {"product_name": "Huawei SUN2000-6KTL", "product_category": "inverter", "quantity": 1, "unit_price": 3800, "arrival_status": ArrivalStatus.arrived},
+            ],
+        },
+        {
+            "access_code": "mno77889",
+            "customer_name": "משה ביטון",
+            "customer_phone": "058-1112222",
+            "customer_email": "moshe@example.com",
+            "status": OrderStatus.activating,
+            "notes": "הפעלת המערכת מול חברת חשמל",
+            "items": [
+                {"product_name": "JA Solar 580W Mono", "product_category": "panel", "quantity": 10, "unit_price": 450, "arrival_status": ArrivalStatus.arrived},
+                {"product_name": "SolarEdge SE5000H", "product_category": "inverter", "quantity": 1, "unit_price": 4500, "arrival_status": ArrivalStatus.arrived},
+                {"product_name": "BYD HVS 5.1kWh", "product_category": "battery", "quantity": 2, "unit_price": 8500, "arrival_status": ArrivalStatus.arrived},
+            ],
+        },
+        {
+            "access_code": "pqr99001",
+            "customer_name": "נועה פרידמן",
+            "customer_phone": "050-3334444",
+            "customer_email": "noa@example.com",
+            "status": OrderStatus.completed,
+            "notes": "הושלם בהצלחה! לקוחה מרוצה",
+            "items": [
+                {"product_name": "Trina Solar 550W Mono", "product_category": "panel", "quantity": 6, "unit_price": 420, "arrival_status": ArrivalStatus.arrived},
+                {"product_name": "SolarEdge SE5000H", "product_category": "inverter", "quantity": 1, "unit_price": 4500, "arrival_status": ArrivalStatus.arrived},
+            ],
+        },
+    ]
+
+    for order_data in orders_data:
+        items_data = order_data.pop("items")
+        order = Order(**order_data)
+        db.add(order)
+        db.flush()
+        for item_data in items_data:
+            db.add(OrderItem(order_id=order.id, **item_data))
+    db.commit()
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     try:
@@ -130,6 +226,7 @@ async def lifespan(app: FastAPI):
     try:
         seed_admin(db)
         seed_products(db)
+        seed_orders(db)
     finally:
         db.close()
     yield

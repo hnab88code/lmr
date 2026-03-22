@@ -1,4 +1,4 @@
-const APP_VERSION = "v1.1.0";
+const APP_VERSION = "v1.2.0";
 const API = "";
 const WHATSAPP_NUMBER = "972501234567";
 
