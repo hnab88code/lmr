@@ -276,6 +276,7 @@
         <div class="admin-actions">
             <button class="btn btn-secondary" onclick="showAdminPage('products')">מוצרים</button>
             <button class="btn btn-secondary" onclick="showAdminPage('contacts')">פניות</button>
+            <button class="btn btn-secondary" onclick="showAdminPage('theme')">עיצוב</button>
             <button class="btn btn-secondary" onclick="backToStore()">חזרה לחנות</button>
             <button class="btn btn-danger" onclick="doLogout()">יציאה</button>
         </div>
@@ -306,6 +307,40 @@
     <div class="admin-page" id="admin-contacts" style="display:none">
         <h2>פניות לקוחות</h2>
         <table class="admin-table"><thead><tr><th>תאריך</th><th>שם</th><th>טלפון</th><th>הודעה</th><th>מוצרים</th><th>סה"כ</th><th>סטטוס</th><th>פעולות</th></tr></thead><tbody id="admin-contacts-body"></tbody></table>
+    </div>
+
+    <!-- Theme Selection -->
+    <div class="admin-page" id="admin-theme" style="display:none">
+        <h2>בחירת עיצוב לאתר</h2>
+        <p style="color:var(--gray);margin-bottom:20px">בחרו עיצוב - השינוי ייכנס לתוקף מיידית לכל המבקרים</p>
+        <div class="theme-grid">
+            <div class="theme-preview" onclick="setTheme('default')">
+                <div class="theme-swatch" style="background:linear-gradient(135deg,#1a252f,#2c3e50);"></div>
+                <div class="theme-colors"><span style="background:#d4a017"></span><span style="background:#2aacb0"></span><span style="background:#2c3e50"></span></div>
+                <div class="theme-name">ברירת מחדל (לוגו)</div>
+            </div>
+            <div class="theme-preview" onclick="setTheme('dark')">
+                <div class="theme-swatch" style="background:linear-gradient(135deg,#0d1117,#161b22);"></div>
+                <div class="theme-colors"><span style="background:#f0c040"></span><span style="background:#3dd6db"></span><span style="background:#0d1117"></span></div>
+                <div class="theme-name">כהה (Dark)</div>
+            </div>
+            <div class="theme-preview" onclick="setTheme('sky-blue')">
+                <div class="theme-swatch" style="background:linear-gradient(135deg,#0f2440,#2c5282);"></div>
+                <div class="theme-colors"><span style="background:#ff8c42"></span><span style="background:#4a9bd9"></span><span style="background:#1e3a5f"></span></div>
+                <div class="theme-name">כחול שמיים (Sky Blue)</div>
+            </div>
+            <div class="theme-preview" onclick="setTheme('apple-green')">
+                <div class="theme-swatch" style="background:linear-gradient(135deg,#0f1a02,#2d4a0a);"></div>
+                <div class="theme-colors"><span style="background:#f59e0b"></span><span style="background:#16a34a"></span><span style="background:#1a2e05"></span></div>
+                <div class="theme-name">ירוק תפוח (Apple Green)</div>
+            </div>
+            <div class="theme-preview" onclick="setTheme('sunset')">
+                <div class="theme-swatch" style="background:linear-gradient(135deg,#27090a,#5c1d0e);"></div>
+                <div class="theme-colors"><span style="background:#f97316"></span><span style="background:#e11d48"></span><span style="background:#431407"></span></div>
+                <div class="theme-name">שקיעה (Sunset)</div>
+            </div>
+        </div>
+        <div class="current-theme-label" id="current-theme-label"></div>
     </div>
 </div>
 

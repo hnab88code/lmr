@@ -5,16 +5,16 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from sqlalchemy import inspect, text
 from backend.database import engine, Base, SessionLocal
-from backend.models import Admin, Product, ProductCategory
+from backend.models import Admin, Product, ProductCategory, SiteSetting
 from backend.auth import hash_password
-from backend.routers import auth, products, contacts
+from backend.routers import auth, products, contacts, settings
 
 
 def auto_migrate():
     """Add missing columns to existing tables (like peak project pattern)."""
     inspector = inspect(engine)
     with engine.connect() as conn:
-        for table_name, model in [("admins", Admin), ("products", Product)]:
+        for table_name, model in [("admins", Admin), ("products", Product), ("site_settings", SiteSetting)]:
             if table_name in inspector.get_table_names():
                 existing = {col["name"] for col in inspector.get_columns(table_name)}
                 for column in model.__table__.columns:
@@ -135,6 +135,7 @@ app = FastAPI(title="L.M.R Solar Systems", version="1.0.0", lifespan=lifespan)
 app.include_router(auth.router)
 app.include_router(products.router)
 app.include_router(contacts.router)
+app.include_router(settings.router)
 
 # Static files
 app.mount("/static", StaticFiles(directory="static"), name="static")

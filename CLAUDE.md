@@ -132,10 +132,14 @@ python3 -m pytest tests/ -v
 - **Contact Form**: Name, phone, email, message - saved to database
 - **WhatsApp Button**: Opens WhatsApp with pre-filled product selection message
 
-## Color Theme (matching logo)
-- **Gold** (#d4a017) - sun, headings, accents
-- **Teal** (#2aacb0) - roof, buttons, interactive elements
-- **Charcoal** (#2c3e50) - background, text, nav
+## Color Themes (5 options, admin-selectable)
+1. **Default** - Gold (#d4a017) + Teal (#2aacb0) + Charcoal (#2c3e50) - matches logo
+2. **Dark** - Dark GitHub-style with gold/teal accents
+3. **Sky Blue** - Ocean blue (#4a9bd9) with orange (#ff8c42) accents
+4. **Apple Green** - Fresh green (#16a34a) with amber (#f59e0b) accents
+5. **Sunset** - Rose (#e11d48) with orange (#f97316) accents
+
+Theme stored in `site_settings` table, applied via `data-theme` attribute on `<html>`.
 
 ## Admin Panel
 - Product CRUD + contact requests management

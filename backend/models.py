@@ -54,3 +54,11 @@ class ContactRequest(Base):
     total_price = Column(Float, nullable=True)
     status = Column(SAEnum(ContactStatus), default=ContactStatus.new)
     created_at = Column(DateTime, server_default=func.now())
+
+
+class SiteSetting(Base):
+    __tablename__ = "site_settings"
+
+    id = Column(Integer, primary_key=True, index=True)
+    key = Column(String(50), unique=True, nullable=False)
+    value = Column(String(500), default="")

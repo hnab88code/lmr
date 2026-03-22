@@ -9,6 +9,7 @@ let quantities = { panel: 1, battery: 1 };
 
 // ===== Init =====
 document.addEventListener("DOMContentLoaded", () => {
+    loadTheme();
     loadProducts();
 });
 
@@ -289,6 +290,7 @@ function showAdminPage(page) {
     document.getElementById(`admin-${page}`).style.display = "block";
     if (page === "products") loadAdminProducts();
     if (page === "contacts") loadAdminContacts();
+    if (page === "theme") loadThemePage();
 }
 
 // ===== Admin Products =====
@@ -481,4 +483,36 @@ function calcEstimate() {
 
 function scrollToContact() {
     document.getElementById("contact-section").scrollIntoView({ behavior: "smooth" });
+}
+
+// ===== Themes =====
+async function loadTheme() {
+    const res = await fetch("/api/settings/theme");
+    if (res.ok) {
+        const data = await res.json();
+        applyTheme(data.theme);
+    }
+}
+
+function applyTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme || "default");
+}
+
+async function setTheme(theme) {
+    const res = await api(`/api/settings/theme?theme=${theme}`, { method: "PUT" });
+    if (res.ok) {
+        applyTheme(theme);
+        document.querySelectorAll(".theme-preview").forEach(el => el.classList.remove("active"));
+        event.currentTarget.classList.add("active");
+        document.getElementById("current-theme-label").textContent = "העיצוב עודכן בהצלחה!";
+    }
+}
+
+async function loadThemePage() {
+    const res = await fetch("/api/settings/theme");
+    if (!res.ok) return;
+    const data = await res.json();
+    const themeNames = { default: "ברירת מחדל", dark: "כהה", "sky-blue": "כחול שמיים", "apple-green": "ירוק תפוח", sunset: "שקיעה" };
+    document.getElementById("current-theme-label").textContent = `עיצוב נוכחי: ${themeNames[data.theme] || data.theme}`;
+    document.querySelectorAll(".theme-preview").forEach(el => el.classList.remove("active"));
 }
