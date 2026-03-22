@@ -15,82 +15,232 @@
         <div class="hero-content">
             <img src="/static/logo.jpeg" alt="L.M.R Logo" class="hero-logo">
             <h1>L.M.R</h1>
-            <h2>מערכות סולאריות</h2>
-            <p>חיסכון באנרגיה, השקעה בעתיד</p>
+            <h2>Solar Energy Systems</h2>
+            <p>תכנון . ניהול . ביצוע</p>
             <button class="btn btn-admin-login" onclick="showLogin()">כניסת מנהל</button>
         </div>
     </header>
 
-    <!-- Products Section -->
-    <main class="products-container">
-        <h2 class="section-title">בחרו את המערכת שלכם</h2>
-        <p class="section-subtitle">בחרו מוצרים מכל קטגוריה לפי הצורך שלכם. אפשר לבחור מכל קטגוריה או לדלג</p>
+    <!-- Tabs Navigation -->
+    <nav class="tabs-nav">
+        <button class="tab-btn active" onclick="switchTab('design')">עצבו את המערכת שלכם</button>
+        <button class="tab-btn" onclick="switchTab('estimate')">הערכת מחיר לפי גודל</button>
+        <button class="tab-btn" onclick="switchTab('gallery')">העבודות שלנו</button>
+    </nav>
 
-        <!-- Panels -->
-        <section class="category-section" id="panels-section">
-            <div class="category-header">
-                <span class="category-icon">☀️</span>
-                <h3>פאנלים סולאריים</h3>
-            </div>
-            <div class="product-cards" id="panels-cards"></div>
-            <div class="quantity-row" id="panel-quantity-row" style="display:none">
-                <label>כמות פאנלים:</label>
-                <button class="btn-qty" onclick="changeQty('panel', -1)">−</button>
-                <span class="qty-value" id="panel-qty">1</span>
-                <button class="btn-qty" onclick="changeQty('panel', 1)">+</button>
-                <span class="qty-total" id="panel-qty-total"></span>
-            </div>
-            <label class="skip-option">
-                <input type="radio" name="panel" value="none" checked onchange="updateSummary()">
-                <span>לא צריך פאנלים</span>
-            </label>
-        </section>
+    <!-- ===== TAB 1: Design Your System ===== -->
+    <div class="tab-content active" id="tab-design">
+        <main class="products-container">
+            <h2 class="section-title">בחרו את המערכת שלכם</h2>
+            <p class="section-subtitle">בחרו מוצרים מכל קטגוריה לפי הצורך שלכם. אפשר לבחור מכל קטגוריה או לדלג</p>
 
-        <!-- Inverters -->
-        <section class="category-section" id="inverters-section">
-            <div class="category-header">
-                <span class="category-icon">⚡</span>
-                <h3>ממירים (אינוורטרים)</h3>
-            </div>
-            <div class="product-cards" id="inverters-cards"></div>
-            <label class="skip-option">
-                <input type="radio" name="inverter" value="none" checked onchange="updateSummary()">
-                <span>לא צריך ממיר</span>
-            </label>
-        </section>
+            <!-- Panels -->
+            <section class="category-section" id="panels-section">
+                <div class="category-header">
+                    <span class="category-icon">☀️</span>
+                    <h3>פאנלים סולאריים</h3>
+                </div>
+                <div class="product-cards" id="panels-cards"></div>
+                <div class="quantity-row" id="panel-quantity-row" style="display:none">
+                    <label>כמות פאנלים:</label>
+                    <button class="btn-qty" onclick="changeQty('panel', -1)">−</button>
+                    <span class="qty-value" id="panel-qty">1</span>
+                    <button class="btn-qty" onclick="changeQty('panel', 1)">+</button>
+                    <span class="qty-total" id="panel-qty-total"></span>
+                </div>
+                <label class="skip-option">
+                    <input type="radio" name="panel" value="none" checked onchange="updateSummary()">
+                    <span>לא צריך פאנלים</span>
+                </label>
+            </section>
 
-        <!-- Batteries -->
-        <section class="category-section" id="batteries-section">
-            <div class="category-header">
-                <span class="category-icon">🔋</span>
-                <h3>סוללות אחסון</h3>
-            </div>
-            <div class="product-cards" id="batteries-cards"></div>
-            <div class="quantity-row" id="battery-quantity-row" style="display:none">
-                <label>כמות סוללות:</label>
-                <button class="btn-qty" onclick="changeQty('battery', -1)">−</button>
-                <span class="qty-value" id="battery-qty">1</span>
-                <button class="btn-qty" onclick="changeQty('battery', 1)">+</button>
-                <span class="qty-total" id="battery-qty-total"></span>
-            </div>
-            <label class="skip-option">
-                <input type="radio" name="battery" value="none" checked onchange="updateSummary()">
-                <span>לא צריך סוללה</span>
-            </label>
-        </section>
-    </main>
+            <!-- Inverters -->
+            <section class="category-section" id="inverters-section">
+                <div class="category-header">
+                    <span class="category-icon">⚡</span>
+                    <h3>ממירים (אינוורטרים)</h3>
+                </div>
+                <div class="product-cards" id="inverters-cards"></div>
+                <label class="skip-option">
+                    <input type="radio" name="inverter" value="none" checked onchange="updateSummary()">
+                    <span>לא צריך ממיר</span>
+                </label>
+            </section>
 
-    <!-- Sticky Summary Bar -->
-    <div class="summary-bar" id="summary-bar">
-        <div class="summary-content">
-            <div class="summary-items" id="summary-items">
-                <span class="summary-empty">בחרו מוצרים כדי לראות סיכום</span>
+            <!-- Batteries -->
+            <section class="category-section" id="batteries-section">
+                <div class="category-header">
+                    <span class="category-icon">🔋</span>
+                    <h3>סוללות אחסון</h3>
+                </div>
+                <div class="product-cards" id="batteries-cards"></div>
+                <div class="quantity-row" id="battery-quantity-row" style="display:none">
+                    <label>כמות סוללות:</label>
+                    <button class="btn-qty" onclick="changeQty('battery', -1)">−</button>
+                    <span class="qty-value" id="battery-qty">1</span>
+                    <button class="btn-qty" onclick="changeQty('battery', 1)">+</button>
+                    <span class="qty-total" id="battery-qty-total"></span>
+                </div>
+                <label class="skip-option">
+                    <input type="radio" name="battery" value="none" checked onchange="updateSummary()">
+                    <span>לא צריך סוללה</span>
+                </label>
+            </section>
+        </main>
+
+        <!-- Sticky Summary Bar -->
+        <div class="summary-bar" id="summary-bar">
+            <div class="summary-content">
+                <div class="summary-items" id="summary-items">
+                    <span class="summary-empty">בחרו מוצרים כדי לראות סיכום</span>
+                </div>
+                <div class="summary-total" id="summary-total"></div>
             </div>
-            <div class="summary-total" id="summary-total"></div>
         </div>
     </div>
 
-    <!-- Contact Section -->
+    <!-- ===== TAB 2: Price Estimation ===== -->
+    <div class="tab-content" id="tab-estimate">
+        <div class="estimate-container">
+            <h2 class="section-title">הערכת מחיר לפי גודל הגג</h2>
+            <p class="section-subtitle">בחרו את גודל הגג וסוג הגג לקבלת הערכת מחיר ראשונית</p>
+
+            <div class="estimate-form">
+                <!-- Roof Size -->
+                <div class="estimate-group">
+                    <h3>גודל הגג (מ"ר)</h3>
+                    <div class="estimate-options" id="roof-size-options">
+                        <label class="estimate-card" onclick="selectEstimate('size', this)">
+                            <input type="radio" name="roof-size" value="30">
+                            <div class="estimate-card-inner">
+                                <span class="estimate-icon">🏠</span>
+                                <span class="estimate-label">קטן</span>
+                                <span class="estimate-detail">עד 30 מ"ר</span>
+                                <span class="estimate-detail">~5kW</span>
+                            </div>
+                        </label>
+                        <label class="estimate-card" onclick="selectEstimate('size', this)">
+                            <input type="radio" name="roof-size" value="50">
+                            <div class="estimate-card-inner">
+                                <span class="estimate-icon">🏡</span>
+                                <span class="estimate-label">בינוני</span>
+                                <span class="estimate-detail">30-50 מ"ר</span>
+                                <span class="estimate-detail">~8kW</span>
+                            </div>
+                        </label>
+                        <label class="estimate-card" onclick="selectEstimate('size', this)">
+                            <input type="radio" name="roof-size" value="80">
+                            <div class="estimate-card-inner">
+                                <span class="estimate-icon">🏘️</span>
+                                <span class="estimate-label">גדול</span>
+                                <span class="estimate-detail">50-80 מ"ר</span>
+                                <span class="estimate-detail">~12kW</span>
+                            </div>
+                        </label>
+                        <label class="estimate-card" onclick="selectEstimate('size', this)">
+                            <input type="radio" name="roof-size" value="120">
+                            <div class="estimate-card-inner">
+                                <span class="estimate-icon">🏭</span>
+                                <span class="estimate-label">מסחרי</span>
+                                <span class="estimate-detail">80+ מ"ר</span>
+                                <span class="estimate-detail">~20kW+</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Roof Pattern -->
+                <div class="estimate-group">
+                    <h3>סוג הגג</h3>
+                    <div class="estimate-options" id="roof-pattern-options">
+                        <label class="estimate-card" onclick="selectEstimate('pattern', this)">
+                            <input type="radio" name="roof-pattern" value="flat">
+                            <div class="estimate-card-inner">
+                                <span class="estimate-icon">▬</span>
+                                <span class="estimate-label">גג שטוח</span>
+                                <span class="estimate-detail">בטון / איטום</span>
+                            </div>
+                        </label>
+                        <label class="estimate-card" onclick="selectEstimate('pattern', this)">
+                            <input type="radio" name="roof-pattern" value="angled">
+                            <div class="estimate-card-inner">
+                                <span class="estimate-icon">⛰️</span>
+                                <span class="estimate-label">גג משופע</span>
+                                <span class="estimate-detail">רעפים / פאנל סנדוויץ'</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Estimate Result -->
+                <div class="estimate-result" id="estimate-result" style="display:none">
+                    <div class="estimate-result-inner">
+                        <h3>הערכת מחיר משוערת</h3>
+                        <div class="estimate-price" id="estimate-price"></div>
+                        <div class="estimate-details" id="estimate-details"></div>
+                        <p class="pricing-note">* המחיר הינו הערכה בלבד. לתמחור מדויק אנא צרו קשר</p>
+                        <button class="btn btn-primary" onclick="scrollToContact()">צרו קשר לתמחור מדויק</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TAB 3: Our Work Gallery ===== -->
+    <div class="tab-content" id="tab-gallery">
+        <div class="gallery-container">
+            <h2 class="section-title">העבודות שלנו</h2>
+            <p class="section-subtitle">מבחר מהתקנות שביצענו ללקוחות מרוצים</p>
+
+            <div class="gallery-grid" id="gallery-grid">
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">
+                        <span>☀️</span>
+                        <p>התקנה ביתית - 8kW</p>
+                        <p class="gallery-desc">מערכת סולארית על גג שטוח, 14 פאנלים</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">
+                        <span>⚡</span>
+                        <p>מערכת מסחרית - 20kW</p>
+                        <p class="gallery-desc">התקנה על גג מפעל, 36 פאנלים + סוללות</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">
+                        <span>🔋</span>
+                        <p>גיבוי ביתי + סולארי</p>
+                        <p class="gallery-desc">מערכת משולבת עם סוללות Tesla Powerwall</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">
+                        <span>🏡</span>
+                        <p>התקנה על גג רעפים</p>
+                        <p class="gallery-desc">12 פאנלים על גג משופע, 6.6kW</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">
+                        <span>🏘️</span>
+                        <p>פרויקט שכונתי</p>
+                        <p class="gallery-desc">התקנה על 4 בניינים, 80kW כולל</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">
+                        <span>☀️</span>
+                        <p>חווה סולארית</p>
+                        <p class="gallery-desc">מערכת קרקעית 50kW לחקלאות</p>
+                    </div>
+                </div>
+            </div>
+            <p class="gallery-note">* להוספת תמונות אמיתיות, פנו למנהל המערכת</p>
+        </div>
+    </div>
+
+    <!-- Contact Section (shared across tabs) -->
     <section class="contact-section" id="contact-section">
         <h2 class="section-title">צרו קשר</h2>
         <p class="pricing-note">* לתמחור מדויק יותר אנא צרו קשר</p>
@@ -104,7 +254,7 @@
                 <input type="email" id="contact-email" placeholder="אימייל (אופציונלי)">
                 <textarea id="contact-message" placeholder="הודעה / הערות" rows="3"></textarea>
                 <button type="submit" class="btn btn-primary">שלח פנייה</button>
-                <div class="form-success" id="form-success" style="display:none">✅ הפנייה נשלחה בהצלחה! ניצור קשר בהקדם</div>
+                <div class="form-success" id="form-success" style="display:none">הפנייה נשלחה בהצלחה! ניצור קשר בהקדם</div>
             </form>
 
             <!-- WhatsApp -->
@@ -120,7 +270,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p>L.M.R מערכות סולאריות &copy; 2026</p>
+        <p>L.M.R Solar Energy Systems &copy; 2026 | תכנון . ניהול . ביצוע</p>
     </footer>
 </div>
 

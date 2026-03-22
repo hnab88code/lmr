@@ -111,14 +111,35 @@ python3 -m pytest tests/ -v
 1. BYD HVS 5.1kWh - ₪8,500
 2. Tesla Powerwall 3 13.5kWh - ₪22,000
 
-## Frontend Features
-- **Hero**: L.M.R branding with solar energy tagline
-- **Product Selection**: 3 categories with radio selection per category + "don't need" skip option
-- **Live Summary Bar**: Sticky bottom bar showing selected items and total price
+## Frontend - Tab Navigation (3 tabs)
+
+### Tab 1: עצבו את המערכת שלכם (Design Your System)
+- **Product Selection**: 3 categories (panels, inverters, batteries) with radio selection per category
+- **Skip Card**: "Don't need" option rendered as same-size card in product grid
+- **Quantity Selector**: +/- controls for panels and batteries, price multiplied by quantity
+- **Live Summary Bar**: Sticky bottom bar showing selected items, quantities, and total price
+
+### Tab 2: הערכת מחיר לפי גודל (Price Estimation by Size)
+- **Roof Size**: 4 options (small/medium/large/commercial) with kW and panel count
+- **Roof Pattern**: Flat or angled (different pricing)
+- **Estimate Result**: Shows price range, system specs, and CTA to contact
+
+### Tab 3: העבודות שלנו (Our Work)
+- **Gallery**: Placeholder cards for previous installation photos
+- Admin can replace with real project images
+
+### Shared (all tabs)
 - **Contact Form**: Name, phone, email, message - saved to database
 - **WhatsApp Button**: Opens WhatsApp with pre-filled product selection message
-- **Admin Panel**: Product CRUD + contact requests management
-- **Responsive**: Desktop, tablet (768px), mobile (480px) breakpoints
+
+## Color Theme (matching logo)
+- **Gold** (#d4a017) - sun, headings, accents
+- **Teal** (#2aacb0) - roof, buttons, interactive elements
+- **Charcoal** (#2c3e50) - background, text, nav
+
+## Admin Panel
+- Product CRUD + contact requests management
+- Responsive: Desktop, tablet (768px), mobile (480px) breakpoints
 
 ## Known Issues
 - `passlib` requires `bcrypt==4.0.1` (newer versions break compatibility)

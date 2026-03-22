@@ -421,3 +421,51 @@ async function updateContactStatus(id, status) {
     await api(`/api/contacts/${id}/status?status=${status}`, { method: "PUT" });
     loadAdminContacts();
 }
+
+// ===== Tabs =====
+function switchTab(tabName) {
+    document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+    document.querySelectorAll(".tab-content").forEach(tc => tc.classList.remove("active"));
+    document.getElementById(`tab-${tabName}`).classList.add("active");
+    event.target.classList.add("active");
+}
+
+// ===== Price Estimation =====
+const estimateData = {
+    // price ranges per kW system size [panels_cost, inverter_cost, installation_cost]
+    30:  { kw: 5,  panels: 8,  priceFlat: 18000, priceAngled: 22000 },
+    50:  { kw: 8,  panels: 14, priceFlat: 28000, priceAngled: 34000 },
+    80:  { kw: 12, panels: 21, priceFlat: 42000, priceAngled: 50000 },
+    120: { kw: 20, panels: 35, priceFlat: 65000, priceAngled: 78000 },
+};
+
+function selectEstimate(type, el) {
+    calcEstimate();
+}
+
+function calcEstimate() {
+    const sizeRadio = document.querySelector('input[name="roof-size"]:checked');
+    const patternRadio = document.querySelector('input[name="roof-pattern"]:checked');
+    if (!sizeRadio || !patternRadio) {
+        document.getElementById("estimate-result").style.display = "none";
+        return;
+    }
+
+    const size = sizeRadio.value;
+    const pattern = patternRadio.value;
+    const data = estimateData[size];
+    const price = pattern === "flat" ? data.priceFlat : data.priceAngled;
+
+    document.getElementById("estimate-price").textContent = `₪${price.toLocaleString()} - ₪${(price * 1.2).toLocaleString()}`;
+    document.getElementById("estimate-details").innerHTML = `
+        הספק מערכת: ~${data.kw}kW<br>
+        מספר פאנלים משוער: ~${data.panels}<br>
+        סוג גג: ${pattern === "flat" ? "שטוח" : "משופע"}<br>
+        כולל: פאנלים + ממיר + התקנה
+    `;
+    document.getElementById("estimate-result").style.display = "block";
+}
+
+function scrollToContact() {
+    document.getElementById("contact-section").scrollIntoView({ behavior: "smooth" });
+}
