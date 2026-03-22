@@ -74,54 +74,6 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; direction: rtl; backg
     --card-border: #bee3f8;
 }
 
-/* === Theme: Apple Green === */
-[data-theme="apple-green"] {
-    --gold: #f59e0b;
-    --gold-dark: #d97706;
-    --gold-light: #fefce8;
-    --teal: #16a34a;
-    --teal-dark: #15803d;
-    --teal-light: #dcfce7;
-    --charcoal: #1a2e05;
-    --charcoal-dark: #0f1a02;
-    --charcoal-light: #2d4a0a;
-    --gray: #6b7280;
-    --gray-light: #e5e7eb;
-    --white: #ffffff;
-    --danger: #dc2626;
-    --success: #16a34a;
-    --bg: #f0fdf4;
-    --card-shadow: 0 2px 10px rgba(22,163,74,0.08);
-    --body-bg: #f0fdf4;
-    --body-color: #1a2e05;
-    --card-bg: #ffffff;
-    --card-border: #bbf7d0;
-}
-
-/* === Theme: Sunset === */
-[data-theme="sunset"] {
-    --gold: #f97316;
-    --gold-dark: #ea580c;
-    --gold-light: #fff7ed;
-    --teal: #e11d48;
-    --teal-dark: #be123c;
-    --teal-light: #fff1f2;
-    --charcoal: #431407;
-    --charcoal-dark: #27090a;
-    --charcoal-light: #5c1d0e;
-    --gray: #78716c;
-    --gray-light: #e7e5e4;
-    --white: #ffffff;
-    --danger: #dc2626;
-    --success: #16a34a;
-    --bg: #fef2f2;
-    --card-shadow: 0 2px 10px rgba(225,29,72,0.08);
-    --body-bg: #fef2f2;
-    --body-color: #431407;
-    --card-bg: #ffffff;
-    --card-border: #fecdd3;
-}
-
 /* === Buttons === */
 .btn { padding: 10px 24px; border: none; border-radius: 8px; font-size: 15px; cursor: pointer; font-weight: 600; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; }
 .btn-primary { background: var(--teal); color: var(--white); }
@@ -139,11 +91,11 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; direction: rtl; backg
 .btn-delete { background: #fde8e8; color: var(--danger); }
 
 /* === Hero === */
-.hero { background: linear-gradient(135deg, var(--charcoal-dark) 0%, var(--charcoal) 50%, var(--charcoal-light) 100%); color: var(--white); text-align: center; padding: 60px 20px 40px; position: relative; }
+.hero { background: linear-gradient(135deg, var(--charcoal-dark) 0%, var(--charcoal) 50%, var(--charcoal-light) 100%); color: var(--white); text-align: center; padding: 0 20px 0; position: relative; overflow: hidden; }
 .hero h1 { font-size: 52px; font-weight: 800; letter-spacing: 6px; margin-bottom: 4px; color: var(--gold); }
 .hero h2 { font-size: 20px; font-weight: 400; color: var(--teal); letter-spacing: 3px; margin-bottom: 8px; }
-.hero p { font-size: 16px; opacity: 0.7; letter-spacing: 2px; }
-.hero-logo { width: 130px; height: 130px; object-fit: contain; border-radius: 50%; margin-bottom: 12px; box-shadow: 0 4px 24px rgba(212,160,23,0.3); }
+.hero-tagline { font-size: 20px; letter-spacing: 3px; color: rgba(255,255,255,0.6); margin-top: 0; }
+.hero-logo { width: 500px; height: 500px; object-fit: contain; margin-bottom: 0; margin-top: -100px; }
 
 /* === Tabs === */
 .tabs-nav { display: flex; justify-content: center; background: var(--charcoal); padding: 0; border-bottom: 3px solid var(--gold); position: sticky; top: 0; z-index: 50; }
@@ -347,8 +299,7 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; direction: rtl; backg
 
 /* === Responsive === */
 @media (max-width: 768px) {
-    .hero h1 { font-size: 38px; }
-    .hero h2 { font-size: 16px; }
+    .hero-logo { width: 350px; height: 350px; margin-top: -70px; }
     .tabs-nav { flex-wrap: wrap; }
     .tab-btn { font-size: 14px; padding: 12px 16px; flex: 1; min-width: 120px; text-align: center; }
     .product-cards { grid-template-columns: 1fr; }
@@ -361,9 +312,8 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; direction: rtl; backg
     .form-row { flex-direction: column; }
 }
 @media (max-width: 480px) {
-    .hero { padding: 40px 16px 30px; }
-    .hero h1 { font-size: 30px; }
-    .hero-logo { width: 100px; height: 100px; }
+    .hero-logo { width: 280px; height: 280px; margin-top: -50px; }
+    .hero-tagline { font-size: 16px; }
     .section-title { font-size: 22px; }
     .tab-btn { font-size: 13px; padding: 10px 12px; }
     .estimate-options { grid-template-columns: 1fr; }

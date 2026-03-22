@@ -6,7 +6,7 @@ from backend.auth import require_admin
 
 router = APIRouter(prefix="/api/settings", tags=["settings"])
 
-VALID_THEMES = ["default", "dark", "sky-blue", "apple-green", "sunset"]
+VALID_THEMES = ["default", "dark", "sky-blue"]
 
 
 @router.get("/theme")

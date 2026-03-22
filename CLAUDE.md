@@ -36,14 +36,16 @@ lmr/
 │   ├── main.py                  # FastAPI app, admin seed, product seed, auto-migrate
 │   ├── config.py                # Settings (DB URL, secret key, WhatsApp number)
 │   ├── database.py              # SQLAlchemy engine, session, Base
-│   ├── models.py                # ORM models (Admin, Product, ContactRequest)
+│   ├── models.py                # ORM models (Admin, Product, ContactRequest, Order, OrderItem, SiteSetting)
 │   ├── schemas.py               # Pydantic request/response schemas
 │   ├── auth.py                  # JWT auth utilities + require_admin
 │   └── routers/
 │       ├── __init__.py
 │       ├── auth.py              # POST /api/auth/login
 │       ├── products.py          # CRUD /api/products (public: read, admin: write)
-│       └── contacts.py          # POST /api/contacts (public), GET/PUT (admin)
+│       ├── contacts.py          # POST /api/contacts (public), GET/PUT (admin)
+│       ├── settings.py          # GET/PUT /api/settings/theme
+│       └── orders.py            # CRUD /api/orders + public tracking
 ├── static/
 │   ├── index.html               # Storefront + admin panel
 │   ├── styles.css               # RTL, responsive, solar theme
@@ -132,7 +134,7 @@ python3 -m pytest tests/ -v
 1. BYD HVS 5.1kWh - ₪8,500
 2. Tesla Powerwall 3 13.5kWh - ₪22,000
 
-## Frontend - Tab Navigation (3 tabs)
+## Frontend - Tab Navigation (4 tabs)
 
 ### Tab 1: עצבו את המערכת שלכם (Design Your System)
 - **Product Selection**: 3 categories (panels, inverters, batteries) with radio selection per category
@@ -149,22 +151,30 @@ python3 -m pytest tests/ -v
 - **Gallery**: Placeholder cards for previous installation photos
 - Admin can replace with real project images
 
+### Tab 4: מעקב הזמנה (Order Tracking)
+- **Tracking Form**: Enter order ID + access code
+- **Status Timeline**: Visual progress bar with icons for each order status
+- **Product Table**: Shows each item's arrival status (pending/arrived)
+
 ### Shared (all tabs)
 - **Contact Form**: Name, phone, email, message - saved to database
 - **WhatsApp Button**: Opens WhatsApp with pre-filled product selection message
 
-## Color Themes (5 options, admin-selectable)
+## Color Themes (3 options, admin-selectable)
 1. **Default** - Gold (#d4a017) + Teal (#2aacb0) + Charcoal (#2c3e50) - matches logo
 2. **Dark** - Dark GitHub-style with gold/teal accents
 3. **Sky Blue** - Ocean blue (#4a9bd9) with orange (#ff8c42) accents
-4. **Apple Green** - Fresh green (#16a34a) with amber (#f59e0b) accents
-5. **Sunset** - Rose (#e11d48) with orange (#f97316) accents
 
 Theme stored in `site_settings` table, applied via `data-theme` attribute on `<html>`.
 
 ## Admin Panel
-- Product CRUD + contact requests management
+- Product CRUD + contact requests + order management + theme selection
 - Responsive: Desktop, tablet (768px), mobile (480px) breakpoints
+
+## Deployment Notes
+- **Procfile**: 1 worker (`-w 1`) to avoid SQLite race conditions on Render free tier
+- **Startup**: `create_all` and `auto_migrate` wrapped in try/except for resilience
+- SQLite on Render ephemeral disk: seed data recreates on startup, manual data lost on redeploy
 
 ## Known Issues
 - `passlib` requires `bcrypt==4.0.1` (newer versions break compatibility)

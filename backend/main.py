@@ -118,8 +118,14 @@ def seed_products(db):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    Base.metadata.create_all(bind=engine, checkfirst=True)
-    auto_migrate()
+    try:
+        Base.metadata.create_all(bind=engine, checkfirst=True)
+    except Exception:
+        pass  # Table already exists (race condition with multiple workers)
+    try:
+        auto_migrate()
+    except Exception:
+        pass  # Column already added by another worker
     db = SessionLocal()
     try:
         seed_admin(db)

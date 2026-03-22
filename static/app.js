@@ -513,7 +513,7 @@ async function loadThemePage() {
     const res = await fetch("/api/settings/theme");
     if (!res.ok) return;
     const data = await res.json();
-    const themeNames = { default: "ברירת מחדל", dark: "כהה", "sky-blue": "כחול שמיים", "apple-green": "ירוק תפוח", sunset: "שקיעה" };
+    const themeNames = { default: "ברירת מחדל", dark: "כהה", "sky-blue": "כחול שמיים" };
     document.getElementById("current-theme-label").textContent = `עיצוב נוכחי: ${themeNames[data.theme] || data.theme}`;
     document.querySelectorAll(".theme-preview").forEach(el => el.classList.remove("active"));
 }
