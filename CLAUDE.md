@@ -6,6 +6,8 @@
 - **After each commit, print the current version number** to the user.
 - **Database columns**: When adding new columns to existing models, the `auto_migrate()` function in `main.py` handles it automatically.
 - **UI Language**: Hebrew (RTL), code in English.
+- **Git**: NEVER push to remote. Only commit. The user will push manually.
+- **Dependencies**: Before installing, check if dependencies are already installed first.
 
 ## Project Overview
 Public-facing web app for **L.M.R** solar energy systems sales. Hebrew RTL interface.
