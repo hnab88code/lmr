@@ -73,6 +73,9 @@ python3 -m pytest tests/ -v
 | `admins` | Admin | Single admin account with JWT auth |
 | `products` | Product | Solar products (category, name, brand, price, specs) |
 | `contact_requests` | ContactRequest | Customer inquiries with selected products |
+| `orders` | Order | Customer orders with status tracking and access codes |
+| `order_items` | OrderItem | Individual products in an order with arrival status |
+| `site_settings` | SiteSetting | Key-value settings (theme, etc.) |
 
 ## Product Categories
 - **panel** (פאנל סולארי) - Solar panels
@@ -96,6 +99,24 @@ python3 -m pytest tests/ -v
 - `POST /api/contacts` - Submit contact request (public)
 - `GET /api/contacts` - List all requests (admin only)
 - `PUT /api/contacts/{id}/status?status=` - Update status (admin only)
+
+### Orders
+- `GET /api/orders/track?order_id=X&code=Y` - Track order (public, requires ID + access code)
+- `GET /api/orders` - List all orders (admin only)
+- `POST /api/orders` - Create order with items (admin only, auto-generates access code)
+- `PUT /api/orders/{id}` - Update order status/notes (admin only)
+- `PUT /api/orders/{id}/items/{item_id}?arrival_status=` - Update item arrival (admin only)
+- `DELETE /api/orders/{id}` - Delete order (admin only)
+
+### Settings
+- `GET /api/settings/theme` - Get current theme (public)
+- `PUT /api/settings/theme?theme=` - Set theme (admin only)
+
+## Order Tracking
+- **Statuses**: received → electric_company → delivery → installing → activating → completed
+- **Item arrival**: Each product tracks separately (pending/arrived)
+- **Access**: Admin creates order, gets unique 8-char code. Customer enters order ID + code to track
+- **Timeline**: Visual progress bar with icons for each status
 
 ## Seeded Products (6 total)
 

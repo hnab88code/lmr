@@ -290,6 +290,7 @@ function showAdminPage(page) {
     document.getElementById(`admin-${page}`).style.display = "block";
     if (page === "products") loadAdminProducts();
     if (page === "contacts") loadAdminContacts();
+    if (page === "orders") loadAdminOrders();
     if (page === "theme") loadThemePage();
 }
 
@@ -515,4 +516,200 @@ async function loadThemePage() {
     const themeNames = { default: "ברירת מחדל", dark: "כהה", "sky-blue": "כחול שמיים", "apple-green": "ירוק תפוח", sunset: "שקיעה" };
     document.getElementById("current-theme-label").textContent = `עיצוב נוכחי: ${themeNames[data.theme] || data.theme}`;
     document.querySelectorAll(".theme-preview").forEach(el => el.classList.remove("active"));
+}
+
+// ===== Order Tracking (Public) =====
+const ORDER_STATUSES = [
+    { key: "received", label: "הזמנה התקבלה", icon: "📋" },
+    { key: "electric_company", label: "חברת חשמל", icon: "🏢" },
+    { key: "delivery", label: "משלוח", icon: "🚚" },
+    { key: "installing", label: "התקנה", icon: "🔧" },
+    { key: "activating", label: "הפעלה", icon: "⚡" },
+    { key: "completed", label: "הושלם", icon: "✅" },
+];
+
+async function trackOrder() {
+    const orderId = document.getElementById("track-order-id").value;
+    const code = document.getElementById("track-code").value;
+    const errEl = document.getElementById("tracking-error");
+    const resultEl = document.getElementById("tracking-result");
+    errEl.style.display = "none";
+    resultEl.style.display = "none";
+
+    if (!orderId || !code) { errEl.textContent = "נא למלא מספר הזמנה וקוד גישה"; errEl.style.display = "block"; return; }
+
+    const res = await fetch(`/api/orders/track?order_id=${orderId}&code=${code}`);
+    if (!res.ok) { errEl.textContent = "הזמנה לא נמצאה. בדקו את הפרטים ונסו שנית"; errEl.style.display = "block"; return; }
+
+    const order = await res.json();
+    const currentIdx = ORDER_STATUSES.findIndex(s => s.key === order.status);
+
+    let timelineHtml = '<div class="order-timeline">';
+    ORDER_STATUSES.forEach((s, i) => {
+        const cls = i < currentIdx ? "done" : i === currentIdx ? "active" : "";
+        timelineHtml += `<div class="timeline-step ${cls}"><div class="timeline-dot">${s.icon}</div><div class="timeline-label">${s.label}</div></div>`;
+    });
+    timelineHtml += '</div>';
+
+    let itemsHtml = "";
+    if (order.items && order.items.length > 0) {
+        const catLabels = { panel: "פאנל", inverter: "ממיר", battery: "סוללה" };
+        itemsHtml = `<div class="tracking-items"><h4>פריטים בהזמנה</h4><table><thead><tr><th>מוצר</th><th>קטגוריה</th><th>כמות</th><th>סטטוס הגעה</th></tr></thead><tbody>`;
+        for (const item of order.items) {
+            const arrCls = item.arrival_status === "arrived" ? "arrival-arrived" : "arrival-pending";
+            const arrLabel = item.arrival_status === "arrived" ? "הגיע ✓" : "ממתין...";
+            itemsHtml += `<tr><td>${item.product_name}</td><td>${catLabels[item.product_category] || item.product_category}</td><td>${item.quantity}</td><td class="${arrCls}">${arrLabel}</td></tr>`;
+        }
+        itemsHtml += `</tbody></table></div>`;
+    }
+
+    resultEl.innerHTML = `
+        <div class="tracking-header">
+            <h3>הזמנה #${order.id}</h3>
+            <p>${order.customer_name} | ${order.customer_phone}</p>
+        </div>
+        ${timelineHtml}
+        ${itemsHtml}
+    `;
+    resultEl.style.display = "block";
+}
+
+// ===== Admin Orders =====
+async function loadAdminOrders() {
+    const res = await api("/api/orders");
+    if (!res.ok) return;
+    const orders = await res.json();
+    const body = document.getElementById("admin-orders-body");
+    const statusLabels = { received: "התקבלה", electric_company: "חברת חשמל", delivery: "משלוח", installing: "התקנה", activating: "הפעלה", completed: "הושלם" };
+
+    if (orders.length === 0) {
+        body.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--gray)">אין הזמנות</td></tr>`;
+        return;
+    }
+    body.innerHTML = orders.map(o => {
+        const date = o.created_at ? new Date(o.created_at).toLocaleDateString("he-IL") : "-";
+        return `<tr>
+            <td>${o.id}</td>
+            <td>${o.customer_name}</td>
+            <td>${o.customer_phone}</td>
+            <td><code style="background:var(--gold-light);padding:2px 8px;border-radius:4px;font-weight:700">${o.access_code}</code></td>
+            <td><span class="status-badge status-${o.status === 'completed' ? 'closed' : o.status === 'received' ? 'new' : 'contacted'}">${statusLabels[o.status] || o.status}</span></td>
+            <td>${date}</td>
+            <td>
+                <button class="btn btn-sm btn-edit" onclick="viewOrder(${o.id})">פרטים</button>
+                <button class="btn btn-sm btn-delete" onclick="deleteOrder(${o.id})">מחק</button>
+            </td>
+        </tr>`;
+    }).join("");
+}
+
+function showOrderModal() {
+    document.getElementById("order-modal").style.display = "flex";
+    document.getElementById("order-modal-title").textContent = "הזמנה חדשה";
+    document.getElementById("order-id").value = "";
+    document.getElementById("order-name").value = "";
+    document.getElementById("order-phone").value = "";
+    document.getElementById("order-email").value = "";
+    document.getElementById("order-notes").value = "";
+    document.getElementById("order-items-list").innerHTML = "";
+    addOrderItemRow();
+}
+
+function hideOrderModal() { document.getElementById("order-modal").style.display = "none"; }
+
+function addOrderItemRow() {
+    const list = document.getElementById("order-items-list");
+    const row = document.createElement("div");
+    row.className = "order-item-row";
+    row.innerHTML = `
+        <input type="text" placeholder="שם מוצר" class="oi-name" required>
+        <select class="oi-cat"><option value="panel">פאנל</option><option value="inverter">ממיר</option><option value="battery">סוללה</option></select>
+        <input type="number" placeholder="כמות" class="oi-qty" value="1" min="1">
+        <input type="number" placeholder="מחיר" class="oi-price" step="0.01">
+        <button type="button" class="btn btn-sm btn-delete" onclick="this.parentElement.remove()">✕</button>
+    `;
+    list.appendChild(row);
+}
+
+async function saveOrder(e) {
+    e.preventDefault();
+    const items = [];
+    document.querySelectorAll(".order-item-row").forEach(row => {
+        const name = row.querySelector(".oi-name").value;
+        if (!name) return;
+        items.push({
+            product_name: name,
+            product_category: row.querySelector(".oi-cat").value,
+            quantity: parseInt(row.querySelector(".oi-qty").value) || 1,
+            unit_price: parseFloat(row.querySelector(".oi-price").value) || null,
+        });
+    });
+
+    const body = {
+        customer_name: document.getElementById("order-name").value,
+        customer_phone: document.getElementById("order-phone").value,
+        customer_email: document.getElementById("order-email").value,
+        notes: document.getElementById("order-notes").value,
+        items,
+    };
+
+    const res = await api("/api/orders", { method: "POST", body: JSON.stringify(body) });
+    if (res.ok) {
+        const order = await res.json();
+        hideOrderModal();
+        loadAdminOrders();
+        alert(`הזמנה #${order.id} נוצרה!\nקוד גישה ללקוח: ${order.access_code}`);
+    } else {
+        const err = await res.json();
+        alert(err.detail || "שגיאה ביצירת הזמנה");
+    }
+}
+
+async function viewOrder(id) {
+    const res = await api(`/api/orders`);
+    if (!res.ok) return;
+    const orders = await res.json();
+    const order = orders.find(o => o.id === id);
+    if (!order) return;
+
+    const statusLabels = { received: "התקבלה", electric_company: "חברת חשמל", delivery: "משלוח", installing: "התקנה", activating: "הפעלה", completed: "הושלם" };
+    const catLabels = { panel: "פאנל", inverter: "ממיר", battery: "סוללה" };
+    const statusOptions = Object.entries(statusLabels).map(([k, v]) => `<option value="${k}" ${order.status === k ? "selected" : ""}>${v}</option>`).join("");
+
+    let itemsHtml = order.items.map(item => {
+        const arrivalSel = `<select onchange="updateItemArrival(${order.id}, ${item.id}, this.value)">
+            <option value="pending" ${item.arrival_status === "pending" ? "selected" : ""}>ממתין</option>
+            <option value="arrived" ${item.arrival_status === "arrived" ? "selected" : ""}>הגיע</option>
+        </select>`;
+        return `<tr><td>${item.product_name}</td><td>${catLabels[item.product_category] || ""}</td><td>${item.quantity}</td><td>${item.unit_price ? "₪" + item.unit_price.toLocaleString() : "-"}</td><td>${arrivalSel}</td></tr>`;
+    }).join("");
+
+    document.getElementById("detail-order-id").textContent = order.id;
+    document.getElementById("order-detail-content").innerHTML = `
+        <p><strong>לקוח:</strong> ${order.customer_name} | ${order.customer_phone}</p>
+        <p><strong>קוד גישה:</strong> <code style="background:var(--gold-light);padding:2px 8px;border-radius:4px;font-weight:700;font-size:18px">${order.access_code}</code></p>
+        <p><strong>הערות:</strong> ${order.notes || "-"}</p>
+        <div style="margin:16px 0">
+            <label><strong>סטטוס:</strong></label>
+            <select onchange="updateOrderStatus(${order.id}, this.value)" style="padding:6px 12px;border-radius:6px;border:1px solid var(--gray-light);font-size:14px;margin-right:8px">${statusOptions}</select>
+        </div>
+        <h4 style="margin:12px 0 8px">פריטים</h4>
+        <table class="admin-table"><thead><tr><th>מוצר</th><th>קטגוריה</th><th>כמות</th><th>מחיר</th><th>הגעה</th></tr></thead><tbody>${itemsHtml}</tbody></table>
+    `;
+    document.getElementById("order-detail-modal").style.display = "flex";
+}
+
+async function updateOrderStatus(orderId, status) {
+    await api(`/api/orders/${orderId}`, { method: "PUT", body: JSON.stringify({ status }) });
+    loadAdminOrders();
+}
+
+async function updateItemArrival(orderId, itemId, arrivalStatus) {
+    await api(`/api/orders/${orderId}/items/${itemId}?arrival_status=${arrivalStatus}`, { method: "PUT" });
+}
+
+async function deleteOrder(id) {
+    if (!confirm("למחוק הזמנה זו?")) return;
+    await api(`/api/orders/${id}`, { method: "DELETE" });
+    loadAdminOrders();
 }

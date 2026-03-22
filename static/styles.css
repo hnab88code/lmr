@@ -278,8 +278,47 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; direction: rtl; backg
 .checkbox-label input { accent-color: var(--teal); width: 18px; height: 18px; }
 .login-error { color: var(--danger); margin-top: 8px; font-size: 14px; }
 
+/* === Order Tracking === */
+.tracking-container { max-width: 700px; margin: 0 auto; padding: 0 20px 60px; }
+.tracking-form { display: flex; gap: 12px; margin-bottom: 16px; }
+.tracking-form input { flex: 1; padding: 14px 16px; border: 2px solid var(--card-border); border-radius: 10px; font-size: 16px; background: var(--card-bg); color: var(--body-color); }
+.tracking-form input:focus { outline: none; border-color: var(--teal); }
+.tracking-error { color: var(--danger); text-align: center; font-weight: 600; margin-bottom: 16px; }
+.tracking-result { background: var(--card-bg); border-radius: 16px; padding: 28px; box-shadow: var(--card-shadow); }
+.tracking-header { text-align: center; margin-bottom: 24px; }
+.tracking-header h3 { font-size: 20px; color: var(--charcoal); }
+.tracking-header p { color: var(--gray); font-size: 14px; }
+
+/* Timeline */
+.order-timeline { display: flex; justify-content: space-between; margin: 24px 0; position: relative; padding: 0 10px; }
+.order-timeline::before { content: ''; position: absolute; top: 20px; right: 20px; left: 20px; height: 3px; background: var(--gray-light); z-index: 0; }
+.timeline-step { text-align: center; position: relative; z-index: 1; flex: 1; }
+.timeline-dot { width: 40px; height: 40px; border-radius: 50%; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; border: 3px solid var(--gray-light); background: var(--card-bg); color: var(--gray); transition: all 0.3s; }
+.timeline-step.done .timeline-dot { background: var(--teal); border-color: var(--teal); color: var(--card-bg); }
+.timeline-step.active .timeline-dot { background: var(--gold); border-color: var(--gold); color: var(--card-bg); animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(212,160,23,0.4); } 50% { box-shadow: 0 0 0 8px rgba(212,160,23,0); } }
+.timeline-label { font-size: 12px; color: var(--gray); font-weight: 600; }
+.timeline-step.done .timeline-label { color: var(--teal); }
+.timeline-step.active .timeline-label { color: var(--gold-dark); font-weight: 700; }
+
+/* Items table in tracking */
+.tracking-items { margin-top: 20px; }
+.tracking-items h4 { margin-bottom: 10px; font-size: 16px; }
+.tracking-items table { width: 100%; border-collapse: collapse; }
+.tracking-items th { text-align: right; padding: 8px 12px; font-size: 13px; color: var(--gray); border-bottom: 1px solid var(--gray-light); }
+.tracking-items td { padding: 8px 12px; font-size: 14px; border-bottom: 1px solid var(--gray-light); }
+.arrival-arrived { color: var(--success); font-weight: 600; }
+.arrival-pending { color: var(--gray); }
+
+/* Order item rows in modal */
+.order-item-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+.order-item-row input, .order-item-row select { padding: 8px 10px; border: 1px solid var(--gray-light); border-radius: 6px; font-size: 14px; }
+.order-item-row input[type="text"] { flex: 2; }
+.order-item-row input[type="number"] { flex: 1; }
+.order-item-row select { flex: 1; }
+.order-item-row .btn-delete { padding: 6px 10px; }
+
 /* === Admin === */
-/* === Theme Selector === */
 .theme-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-bottom: 20px; }
 .theme-preview { cursor: pointer; border-radius: 12px; overflow: hidden; border: 3px solid var(--gray-light); transition: all 0.2s; }
 .theme-preview:hover { border-color: var(--teal); transform: translateY(-2px); box-shadow: var(--card-shadow); }

@@ -26,6 +26,7 @@
         <button class="tab-btn active" onclick="switchTab('design')">עצבו את המערכת שלכם</button>
         <button class="tab-btn" onclick="switchTab('estimate')">הערכת מחיר לפי גודל</button>
         <button class="tab-btn" onclick="switchTab('gallery')">העבודות שלנו</button>
+        <button class="tab-btn" onclick="switchTab('tracking')">מעקב הזמנה</button>
     </nav>
 
     <!-- ===== TAB 1: Design Your System ===== -->
@@ -221,6 +222,22 @@
         </div>
     </div>
 
+    <!-- ===== TAB 4: Order Tracking ===== -->
+    <div class="tab-content" id="tab-tracking">
+        <div class="tracking-container">
+            <h2 class="section-title">מעקב הזמנה</h2>
+            <p class="section-subtitle">הזינו את מספר ההזמנה וקוד הגישה שקיבלתם</p>
+
+            <div class="tracking-form">
+                <input type="number" id="track-order-id" placeholder="מספר הזמנה" required>
+                <input type="text" id="track-code" placeholder="קוד גישה" required>
+                <button class="btn btn-primary" onclick="trackOrder()">חפש הזמנה</button>
+            </div>
+            <div class="tracking-error" id="tracking-error" style="display:none"></div>
+            <div class="tracking-result" id="tracking-result" style="display:none"></div>
+        </div>
+    </div>
+
     <!-- Contact Section (shared across tabs) -->
     <section class="contact-section" id="contact-section">
         <h2 class="section-title">צרו קשר</h2>
@@ -275,6 +292,7 @@
         <h1>L.M.R - ניהול</h1>
         <div class="admin-actions">
             <button class="btn btn-secondary" onclick="showAdminPage('products')">מוצרים</button>
+            <button class="btn btn-secondary" onclick="showAdminPage('orders')">הזמנות</button>
             <button class="btn btn-secondary" onclick="showAdminPage('contacts')">פניות</button>
             <button class="btn btn-secondary" onclick="showAdminPage('theme')">עיצוב</button>
             <button class="btn btn-secondary" onclick="backToStore()">חזרה לחנות</button>
@@ -301,6 +319,18 @@
             <h3>🔋 סוללות</h3>
             <table class="admin-table"><thead><tr><th>שם</th><th>מותג</th><th>מחיר</th><th>פעיל</th><th>פעולות</th></tr></thead><tbody id="admin-batteries-body"></tbody></table>
         </div>
+    </div>
+
+    <!-- Orders Management -->
+    <div class="admin-page" id="admin-orders" style="display:none">
+        <div class="admin-toolbar">
+            <h2>ניהול הזמנות</h2>
+            <button class="btn btn-primary" onclick="showOrderModal()">+ הזמנה חדשה</button>
+        </div>
+        <table class="admin-table">
+            <thead><tr><th>#</th><th>לקוח</th><th>טלפון</th><th>קוד גישה</th><th>סטטוס</th><th>תאריך</th><th>פעולות</th></tr></thead>
+            <tbody id="admin-orders-body"></tbody>
+        </table>
     </div>
 
     <!-- Contacts Management -->
@@ -372,6 +402,38 @@
             </div>
             <button type="submit" class="btn btn-primary">שמור</button>
         </form>
+    </div>
+</div>
+
+<!-- ===== ORDER MODAL (ADMIN) ===== -->
+<div class="modal-overlay" id="order-modal" style="display:none">
+    <div class="modal modal-wide">
+        <button class="modal-close" onclick="hideOrderModal()">&times;</button>
+        <h2 id="order-modal-title">הזמנה חדשה</h2>
+        <form onsubmit="saveOrder(event)">
+            <input type="hidden" id="order-id">
+            <div class="form-row">
+                <input type="text" id="order-name" placeholder="שם הלקוח *" required>
+                <input type="tel" id="order-phone" placeholder="טלפון *" required>
+            </div>
+            <input type="email" id="order-email" placeholder="אימייל (אופציונלי)">
+            <textarea id="order-notes" placeholder="הערות" rows="2"></textarea>
+
+            <h3 style="margin:12px 0 8px;font-size:16px">פריטים בהזמנה</h3>
+            <div id="order-items-list"></div>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="addOrderItemRow()" style="margin-bottom:12px">+ הוסף פריט</button>
+
+            <button type="submit" class="btn btn-primary">שמור הזמנה</button>
+        </form>
+    </div>
+</div>
+
+<!-- ===== ORDER DETAIL MODAL (ADMIN) ===== -->
+<div class="modal-overlay" id="order-detail-modal" style="display:none">
+    <div class="modal modal-wide">
+        <button class="modal-close" onclick="document.getElementById('order-detail-modal').style.display='none'">&times;</button>
+        <h2>פרטי הזמנה #<span id="detail-order-id"></span></h2>
+        <div id="order-detail-content"></div>
     </div>
 </div>
 
