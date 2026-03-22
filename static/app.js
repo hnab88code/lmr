@@ -76,7 +76,7 @@ function renderStorefront() {
         }
 
         // Add "don't need" skip card
-        const skipLabels = { panel: "לא צריך פאנלים", inverter: "לא צריך ממיר", battery: "לא צריך סוללה" };
+        const skipLabels = { panel: "ללא פאנלים", inverter: "ללא ממיר", battery: "ללא סוללה" };
         const skipIcons = { panel: "🚫", inverter: "🚫", battery: "🚫" };
         const skipCard = document.createElement("div");
         skipCard.className = `skip-card${!selectedProducts[cat] ? " selected" : ""}`;
