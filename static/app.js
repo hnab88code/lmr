@@ -5,6 +5,7 @@ const WHATSAPP_NUMBER = "972501234567";
 let token = localStorage.getItem("lmr_token") || null;
 let allProducts = [];
 let selectedProducts = { panel: null, inverter: null, battery: null };
+let quantities = { panel: 1, battery: 1 };
 
 // ===== Init =====
 document.addEventListener("DOMContentLoaded", () => {
@@ -73,11 +74,35 @@ function renderStorefront() {
             };
             container.appendChild(card);
         }
+
+        // Add "don't need" skip card
+        const skipLabels = { panel: "לא צריך פאנלים", inverter: "לא צריך ממיר", battery: "לא צריך סוללה" };
+        const skipIcons = { panel: "🚫", inverter: "🚫", battery: "🚫" };
+        const skipCard = document.createElement("div");
+        skipCard.className = `skip-card${!selectedProducts[cat] ? " selected" : ""}`;
+        skipCard.innerHTML = `
+            <input type="radio" name="${cfg.name}" value="none" class="card-radio"
+                ${!selectedProducts[cat] ? "checked" : ""}
+                onchange="deselectCategory('${cat}')">
+            <div class="skip-icon">${skipIcons[cat]}</div>
+            <div class="skip-text">${skipLabels[cat]}</div>
+        `;
+        skipCard.onclick = (e) => {
+            if (e.target.tagName === "INPUT") return;
+            deselectCategory(cat);
+        };
+        container.appendChild(skipCard);
     }
+    updateQuantityRows();
     updateSummary();
 }
 
 // ===== Selection =====
+function deselectCategory(category) {
+    selectedProducts[category] = null;
+    renderStorefront();
+}
+
 function selectProduct(category, productId) {
     const product = allProducts.find(p => p.id === productId);
     if (!product) return;
@@ -90,14 +115,48 @@ function selectProduct(category, productId) {
         const radio = document.querySelector(`input[name="${category}"][value="${productId}"]`);
         if (radio) radio.checked = true;
     }
+    updateQuantityRows();
     renderStorefront();
+}
+
+function changeQty(category, delta) {
+    quantities[category] = Math.max(1, quantities[category] + delta);
+    document.getElementById(`${category}-qty`).textContent = quantities[category];
+    updateQuantityTotals();
+    updateSummary();
+}
+
+function updateQuantityRows() {
+    for (const cat of ["panel", "battery"]) {
+        const row = document.getElementById(`${cat}-quantity-row`);
+        if (selectedProducts[cat]) {
+            row.style.display = "flex";
+        } else {
+            row.style.display = "none";
+            quantities[cat] = 1;
+            document.getElementById(`${cat}-qty`).textContent = 1;
+        }
+    }
+    updateQuantityTotals();
+}
+
+function updateQuantityTotals() {
+    for (const cat of ["panel", "battery"]) {
+        const totalEl = document.getElementById(`${cat}-qty-total`);
+        const product = selectedProducts[cat];
+        if (product && product.price) {
+            totalEl.textContent = `= ₪${(product.price * quantities[cat]).toLocaleString()}`;
+        } else {
+            totalEl.textContent = "";
+        }
+    }
 }
 
 function updateSummary() {
     const itemsEl = document.getElementById("summary-items");
     const totalEl = document.getElementById("summary-total");
 
-    const selected = Object.values(selectedProducts).filter(Boolean);
+    const selected = Object.entries(selectedProducts).filter(([k, v]) => v);
     if (selected.length === 0) {
         itemsEl.innerHTML = `<span class="summary-empty">בחרו מוצרים כדי לראות סיכום</span>`;
         totalEl.textContent = "";
@@ -105,26 +164,39 @@ function updateSummary() {
     }
 
     itemsEl.innerHTML = selected
-        .map(p => `<span class="summary-item">${p.name}</span>`)
+        .map(([cat, p]) => {
+            const qty = quantities[cat] || 1;
+            const label = qty > 1 ? `${p.name} x${qty}` : p.name;
+            return `<span class="summary-item">${label}</span>`;
+        })
         .join("");
 
-    const total = selected.reduce((sum, p) => sum + (p.price || 0), 0);
-    const hasAllPrices = selected.every(p => p.price);
+    let total = 0;
+    let hasAllPrices = true;
+    for (const [cat, p] of selected) {
+        if (!p.price) { hasAllPrices = false; continue; }
+        const qty = quantities[cat] || 1;
+        total += p.price * qty;
+    }
     totalEl.textContent = hasAllPrices ? `סה"כ: ₪${total.toLocaleString()}` : "צרו קשר למחיר מדויק";
 }
 
 // ===== Contact Form =====
 async function submitContact(e) {
     e.preventDefault();
-    const selected = Object.values(selectedProducts).filter(Boolean);
-    const total = selected.reduce((sum, p) => sum + (p.price || 0), 0);
+    const selected = Object.entries(selectedProducts).filter(([k, v]) => v);
+    let total = 0;
+    for (const [cat, p] of selected) {
+        const qty = quantities[cat] || 1;
+        total += (p.price || 0) * qty;
+    }
 
     const body = {
         name: document.getElementById("contact-name").value,
         phone: document.getElementById("contact-phone").value,
         email: document.getElementById("contact-email").value,
         message: document.getElementById("contact-message").value,
-        selected_products: JSON.stringify(selected.map(p => ({ id: p.id, name: p.name, price: p.price }))),
+        selected_products: JSON.stringify(selected.map(([cat, p]) => ({ id: p.id, name: p.name, price: p.price, qty: quantities[cat] || 1 }))),
         total_price: total || null,
     };
 
@@ -138,19 +210,27 @@ async function submitContact(e) {
 
 // ===== WhatsApp =====
 function openWhatsApp() {
-    const selected = Object.values(selectedProducts).filter(Boolean);
+    const selected = Object.entries(selectedProducts).filter(([k, v]) => v);
     let msg = "שלום, אני מעוניין במערכת סולארית:\n\n";
 
     if (selected.length === 0) {
         msg += "אשמח לקבל פרטים על המערכות שלכם.";
     } else {
-        for (const p of selected) {
+        let total = 0;
+        let hasAllPrices = true;
+        for (const [cat, p] of selected) {
+            const qty = quantities[cat] || 1;
             msg += `• ${p.name} (${p.brand})`;
-            if (p.price) msg += ` - ₪${p.price.toLocaleString()}`;
+            if (qty > 1) msg += ` x${qty}`;
+            if (p.price) {
+                msg += ` - ₪${(p.price * qty).toLocaleString()}`;
+                total += p.price * qty;
+            } else {
+                hasAllPrices = false;
+            }
             msg += "\n";
         }
-        const total = selected.reduce((sum, p) => sum + (p.price || 0), 0);
-        if (selected.every(p => p.price)) {
+        if (hasAllPrices) {
             msg += `\nסה"כ משוער: ₪${total.toLocaleString()}`;
         }
     }

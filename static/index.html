@@ -33,6 +33,13 @@
                 <h3>פאנלים סולאריים</h3>
             </div>
             <div class="product-cards" id="panels-cards"></div>
+            <div class="quantity-row" id="panel-quantity-row" style="display:none">
+                <label>כמות פאנלים:</label>
+                <button class="btn-qty" onclick="changeQty('panel', -1)">−</button>
+                <span class="qty-value" id="panel-qty">1</span>
+                <button class="btn-qty" onclick="changeQty('panel', 1)">+</button>
+                <span class="qty-total" id="panel-qty-total"></span>
+            </div>
             <label class="skip-option">
                 <input type="radio" name="panel" value="none" checked onchange="updateSummary()">
                 <span>לא צריך פאנלים</span>
@@ -59,6 +66,13 @@
                 <h3>סוללות אחסון</h3>
             </div>
             <div class="product-cards" id="batteries-cards"></div>
+            <div class="quantity-row" id="battery-quantity-row" style="display:none">
+                <label>כמות סוללות:</label>
+                <button class="btn-qty" onclick="changeQty('battery', -1)">−</button>
+                <span class="qty-value" id="battery-qty">1</span>
+                <button class="btn-qty" onclick="changeQty('battery', 1)">+</button>
+                <span class="qty-total" id="battery-qty-total"></span>
+            </div>
             <label class="skip-option">
                 <input type="radio" name="battery" value="none" checked onchange="updateSummary()">
                 <span>לא צריך סוללה</span>
