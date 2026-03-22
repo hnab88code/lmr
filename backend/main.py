@@ -111,7 +111,7 @@ def seed_products(db):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    Base.metadata.create_all(bind=engine)
+    Base.metadata.create_all(bind=engine, checkfirst=True)
     auto_migrate()
     db = SessionLocal()
     try:
